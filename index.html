@@ -110,6 +110,14 @@ const $=id=>document.getElementById(id);
 const walker=$('walker'),waver=$('waver'),env=$('env'),bubble=$('bubble');
 const f1=walker.querySelector('.f1'),f2=walker.querySelector('.f2');
 const song=$('song');song.volume=.6;
+// si salen de la página (botón de inicio, otra app, otra pestaña) la música se pausa,
+// y si vuelven sigue desde donde quedó
+let sonando=false;
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){sonando=!song.paused;song.pause();}
+  else if(sonando){song.play().catch(()=>{});}
+});
+window.addEventListener('pagehide',()=>song.pause());
 let step=0,tick;
 function empezar(){   // arranca el osito caminando (y la música ya está sonando)
   tick=setInterval(()=>{step^=1;f1.style.opacity=step?0:1;f2.style.opacity=step?1:0},220);
